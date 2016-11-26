@@ -1,4 +1,5 @@
 import os
+import requests
 from flask import Blueprint, request, redirect, url_for
 from flask import current_app as app
 from flask_socketio import send, emit
@@ -12,6 +13,12 @@ def audio():
 		if file:
 			filename = file.filename
 			file.save(os.path.join(app.config['UPLOAD_AUDIO_FOLDER'], filename))
+			output = os.popen('./www/getVoiceDocument.sh')
+			print(output.read())
+			headers = {"Content-type": "application/x-www-form-urlencoded","Content-Length": "0", "Ocp-Apim-Subscription-Key": "c24b0bb50e8944fd941e9fceeffc602f"}
+			url = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken"
+			r = requests.post(url, headers=headers)
+			print(r.text)
 			return 'success'
 	return '''
 	<!doctype html>
