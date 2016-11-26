@@ -1,5 +1,4 @@
-from flask import Flask, Blueprint
-import test
+from flask import Blueprint
 
 test = Blueprint('test', __name__)
 
