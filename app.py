@@ -1,6 +1,6 @@
 import os
-from flask import Flask
-from www.routes import test
+from flask import Flask, Blueprint
+from www.test import test
 
 app = Flask(__name__)
 app.register_blueprint(test, url_prefix='/test')
