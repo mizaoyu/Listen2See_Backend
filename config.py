@@ -1,1 +1,1 @@
-UPLOAD_FOLDER = './public/upload'
+UPLOAD_AUDIO_FOLDER = './public/upload'

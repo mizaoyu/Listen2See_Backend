@@ -11,8 +11,7 @@ def audio():
 		file = request.files['file']
 		if file:
 			filename = file.filename
-			file.save(os.path.join('./public/audio', filename)) # todo: use config file
-			print(app)
+			file.save(os.path.join(app.config['UPLOAD_AUDIO_FOLDER'], filename))
 			return 'success'
 	return '''
 	<!doctype html>
