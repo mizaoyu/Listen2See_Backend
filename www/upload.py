@@ -1,5 +1,7 @@
 import os
 from flask import Blueprint, request, redirect, url_for
+from flask import current_app as app
+from flask_socketio import send, emit
 
 upload = Blueprint('upload', __name__)
 
@@ -10,6 +12,7 @@ def audio():
 		if file:
 			filename = file.filename
 			file.save(os.path.join('./public/audio', filename)) # todo: use config file
+			print(app)
 			return 'success'
 	return '''
 	<!doctype html>
