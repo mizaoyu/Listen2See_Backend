@@ -16,6 +16,5 @@ def handle_test_message(message):
     print('received message: ' + message['data'])
     socketio.emit('testresponse', {'data': 'success'})
 
-
 if __name__ == '__main__':
 	socketio.run(app, host='0.0.0.0')
