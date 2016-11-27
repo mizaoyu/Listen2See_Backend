@@ -9,6 +9,7 @@ import base64
 from io import BytesIO
 import re
 import speech_recognition as sr
+from flask.ext.cors import CORS, cross_origin
 
 
 
@@ -139,6 +140,7 @@ def audio():
 
 
 @upload.route('/getspeak', methods=['GET', 'POST'])
+@cross_origin(origin='*',headers=['Content-Type','Authorization'])
 def getSpeak():
 	result = list()
 	fo = open("foo.txt", "r+")
