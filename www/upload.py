@@ -1,6 +1,6 @@
 import os
 import requests
-from flask import Blueprint, request, redirect, url_for
+from flask import Blueprint, request, redirect, url_for, jsonify
 from flask import current_app as app
 from flask_socketio import send, emit
 import wave
@@ -11,10 +11,11 @@ import re
 import speech_recognition as sr
 
 
+
 upload = Blueprint('upload', __name__)
 r = sr.Recognizer()
-
 speaker = ''
+text = ''
 
 def get_token():  
 	apiKey = "Y9Kw05g3OOfYAYcyg1S4qvcL"  
@@ -82,7 +83,11 @@ def audio():
 				for off in range(int(source.DURATION/10)):
 					audio = r.record(source, duration=10)
 					try:
-						print("Audio says:::::::: \n" + r.recognize_sphinx(audio))
+						text = r.recognize_sphinx(audio)
+						fo = open("foo.txt", "r+")
+						fo.write(speaker+"\n"+text)
+						fo.close()
+						print("Audio says:::::::: \n" + text)
 					except sr.UnknownValueError:
 						print("Could not understand audio")
 
@@ -132,6 +137,23 @@ def audio():
 	</form>
 	'''
 
+
+@upload.route('/getspeak', methods=['GET', 'POST'])
+def getSpeak():
+	result = list()
+	fo = open("foo.txt", "r+")
+	for line in fo.readlines():                          #依次读取每行  
+		line = line.strip()                             #去掉每行头尾空白  
+		if not len(line) or line.startswith('#'):       #判断是否是空行或注释行  
+			continue                                    #是的话，跳过不处理  
+		result.append(line) 
+	fo.close()
+	if request.method == 'GET':
+		if(len(result)>=2):
+			return jsonify({'error': 'false', 'speaker': result[0], 'text': result[1]})
+		else:
+			return jsonify({'error': 'true'})
+		
 @upload.route('/text', methods=['GET', 'POST'])
 def text():
 	if request.method == 'POST':
