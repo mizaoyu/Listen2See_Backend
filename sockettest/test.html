@@ -1,6 +1,6 @@
 <script src="http://cdn.bootcss.com/socket.io/1.6.0/socket.io.js"></script>
 <script type="text/javascript" charset="utf-8">
-    var socket = io.connect('http://localhost:' + 5000);
+    var socket = io.connect('http://www.element14.site:' + 5000);
     socket.on('connect', function() {
         socket.emit('test', {data: 'I\'m connected!'});
     });
