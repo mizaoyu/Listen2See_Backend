@@ -4,7 +4,7 @@ from flask import Blueprint, request, redirect, url_for, jsonify
 from flask import current_app as app
 from flask_socketio import send, emit
 import wave
-import urllib, urllib3, pycurl
+import urllib, urllib3
 import base64
 from io import BytesIO
 import re
@@ -18,45 +18,45 @@ r = sr.Recognizer()
 speaker = ''
 text = ''
 
-def get_token():  
-	apiKey = "Y9Kw05g3OOfYAYcyg1S4qvcL"  
-	secretKey = "c65dd0e07c6b8a4223a9e7403073d2cb"  
+# def get_token():  
+# 	apiKey = "Y9Kw05g3OOfYAYcyg1S4qvcL"  
+# 	secretKey = "c65dd0e07c6b8a4223a9e7403073d2cb"  
 
-	auth_url = "https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=" + apiKey + "&client_secret=" + secretKey;  
+# 	auth_url = "https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=" + apiKey + "&client_secret=" + secretKey;  
 
-	res = urllib3.urlopen(auth_url)  
-	json_data = res.read()  
-	return json.loads(json_data)['access_token']  
+# 	res = urllib3.urlopen(auth_url)  
+# 	json_data = res.read()  
+# 	return json.loads(json_data)['access_token']  
 
-def dump_res(buf):  
-	print(buf) 
+# def dump_res(buf):  
+# 	print(buf) 
 
 
-## post audio to server  
-def use_cloud(token):  
-	fp = wave.open('./public/audio/daoshort.wav', 'rb')  
-	nf = fp.getnframes()  
-	f_len = nf * 2  
-	audio_data = fp.readframes(nf)  
+# ## post audio to server  
+# def use_cloud(token):  
+# 	fp = wave.open('./public/audio/daoshort.wav', 'rb')  
+# 	nf = fp.getnframes()  
+# 	f_len = nf * 2  
+# 	audio_data = fp.readframes(nf)  
 
-	cuid = "wfnuser"
-	srv_url = 'http://vop.baidu.com/server_api' + '?cuid=' + cuid + '&token=' + token  
-	http_header = [  
-		'Content-Type: audio/pcm; rate=1600',  
-		'Content-Length: %d' % f_len  
-	]  
+# 	cuid = "wfnuser"
+# 	srv_url = 'http://vop.baidu.com/server_api' + '?cuid=' + cuid + '&token=' + token  
+# 	http_header = [  
+# 		'Content-Type: audio/pcm; rate=1600',  
+# 		'Content-Length: %d' % f_len  
+# 	]  
 
-	c = pycurl.Curl()  
-	c.setopt(pycurl.URL, str(srv_url)) #curl doesn't support unicode  
-	#c.setopt(c.RETURNTRANSFER, 1)  
-	c.setopt(c.HTTPHEADER, http_header)   #must be list, not dict  
-	c.setopt(c.POST, 1)  
-	c.setopt(c.CONNECTTIMEOUT, 30)  
-	c.setopt(c.TIMEOUT, 30)  
-	c.setopt(c.WRITEFUNCTION, dump_res)  
-	c.setopt(c.POSTFIELDS, audio_data)  
-	c.setopt(c.POSTFIELDSIZE, f_len)  
-	c.perform() #pycurl.perform() has no return val
+# 	c = pycurl.Curl()  
+# 	c.setopt(pycurl.URL, str(srv_url)) #curl doesn't support unicode  
+# 	#c.setopt(c.RETURNTRANSFER, 1)  
+# 	c.setopt(c.HTTPHEADER, http_header)   #must be list, not dict  
+# 	c.setopt(c.POST, 1)  
+# 	c.setopt(c.CONNECTTIMEOUT, 30)  
+# 	c.setopt(c.TIMEOUT, 30)  
+# 	c.setopt(c.WRITEFUNCTION, dump_res)  
+# 	c.setopt(c.POSTFIELDS, audio_data)  
+# 	c.setopt(c.POSTFIELDSIZE, f_len)  
+# 	c.perform() #pycurl.perform() has no return val
 
 @upload.route('/audio', methods=['GET', 'POST'])
 def audio():
